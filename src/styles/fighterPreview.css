@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   flex-basis: 250px;
+  max-height: 50vw;
 }
 
 .fighter-preview___right {
@@ -10,4 +11,30 @@
 
 .fighter-preview___left {
   align-items: flex-start;
+}
+
+.fighter-preview___img {
+  height: 40vh;
+  margin-bottom: 10px;
+}
+
+.fighter-preview__chars-container {
+  width: 100%;
+  border: 5px solid #ca9650;
+  background-color: #ffdfa7;
+}
+
+.fighter-preview__char-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+
+.fighter-preview__char {
+  margin-bottom: 5px;
+}
+
+.fighter-preview__char__name::first-letter {
+  text-transform: uppercase;
 }
