@@ -3,9 +3,13 @@ import { controls } from '../../constants/controls';
 export async function fight(firstFighter, secondFighter) {
   const { health: firstFighterHealth } = firstFighter;
   const { health: secondFighterHealth } = secondFighter;
+  const firstFighterHPConst = Number(firstFighterHealth);
+  const secondFighterHPConst = Number(secondFighterHealth);
   const defenceModeTime = 500;
-  let firstFighterHP = Number(firstFighterHealth);
-  let secondFighterHP = Number(secondFighterHealth);
+  const firstFighterHealthIndicator = document.getElementById('left-fighter-indicator');
+  const secondFighterHealthIndicator = document.getElementById('right-fighter-indicator');
+  let firstFighterHP = firstFighterHPConst;
+  let secondFighterHP = secondFighterHPConst;
   let isFirstFighterInDefenceMode = false;
   let isSecondFighterInDefenceMode = false;
   let firstFighterDefenceModeTimeout = null;
@@ -47,7 +51,7 @@ export async function fight(firstFighter, secondFighter) {
           firstFighterDefenceModeTimeout
         );
         secondFighterHP = secondFighterHP - resultDamage;
-        console.log(resultDamage, isSecondFighterInDefenceMode, secondFighterHP);
+        secondFighterHealthIndicator.style.width = (secondFighterHP / secondFighterHPConst) * 100 + '%';
         checkForWinner(firstFighter, secondFighterHP);
         keyIndexPlOneCriticalHitCombination = 0;
         break;
@@ -61,6 +65,7 @@ export async function fight(firstFighter, secondFighter) {
           secondFighterDefenceModeTimeout
         );
         firstFighterHP = firstFighterHP - resultDamage;
+        firstFighterHealthIndicator.style.width = (firstFighterHP / firstFighterHPConst) * 100 + '%';
         checkForWinner(secondFighter, firstFighterHP);
         keyIndexPlTwoCriticalHitCombination = 0;
         break;
@@ -88,7 +93,7 @@ export async function fight(firstFighter, secondFighter) {
         keyIndexPlOneCriticalHitCombination++;
         if (keyIndexPlOneCriticalHitCombination === 3) {
           secondFighterHP = secondFighterHP - getResultCombinationDamage(firstFighter);
-          console.log(secondFighterHP);
+          secondFighterHealthIndicator.style.width = (secondFighterHP / secondFighterHPConst) * 100 + '%';
           keyIndexPlOneCriticalHitCombination = 0;
           checkForWinner(firstFighter, secondFighterHP);
         }
@@ -97,6 +102,7 @@ export async function fight(firstFighter, secondFighter) {
         keyIndexPlTwoCriticalHitCombination++;
         if (keyIndexPlTwoCriticalHitCombination === 3) {
           firstFighterHP = firstFighterHP - getResultCombinationDamage(secondFighter);
+          firstFighterHealthIndicator.style.width = (firstFighterHP / firstFighterHPConst) * 100 + '%';
           keyIndexPlTwoCriticalHitCombination = 0;
           checkForWinner(secondFighter, firstFighterHP);
         }
@@ -142,8 +148,7 @@ function getResultDamage(
 }
 
 export function getDamage(attacker, defender) {
-  // const damage = getHitPower(attacker) - getBlockPower(defender);
-  const damage = 5 - getBlockPower(defender);
+  const damage = getHitPower(attacker) - getBlockPower(defender);
   if (damage <= 0) {
     return 0;
   }
