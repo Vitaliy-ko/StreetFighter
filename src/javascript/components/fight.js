@@ -6,6 +6,7 @@ export async function fight(firstFighter, secondFighter) {
   const firstFighterHPConst = Number(firstFighterHealth);
   const secondFighterHPConst = Number(secondFighterHealth);
   const defenceModeTime = 500;
+  const criticalHitCombinationTime = 10000;
   const firstFighterHealthIndicator = document.getElementById('left-fighter-indicator');
   const secondFighterHealthIndicator = document.getElementById('right-fighter-indicator');
   let firstFighterHP = firstFighterHPConst;
@@ -14,6 +15,8 @@ export async function fight(firstFighter, secondFighter) {
   let isSecondFighterInDefenceMode = false;
   let firstFighterDefenceModeTimeout = null;
   let secondFighterDefenceModeTimeout = null;
+  let isFirstFighterCriticalHitCombinationDisabled = false;
+  let isSecondFighterCriticalHitCombinationDisabled = false;
   let keyIndexPlOneCriticalHitCombination = 0;
   let keyIndexPlTwoCriticalHitCombination = 0;
 
@@ -91,23 +94,29 @@ export async function fight(firstFighter, secondFighter) {
 
       case PlayerOneCriticalHitCombination[keyIndexPlOneCriticalHitCombination]:
         keyIndexPlOneCriticalHitCombination++;
-        if (keyIndexPlOneCriticalHitCombination === 3) {
+        if (keyIndexPlOneCriticalHitCombination === 3 && !isFirstFighterCriticalHitCombinationDisabled) {
           secondFighterHP = secondFighterHP - getResultCombinationDamage(firstFighter);
           secondFighterHealthIndicator.style.width = (secondFighterHP / secondFighterHPConst) * 100 + '%';
           keyIndexPlOneCriticalHitCombination = 0;
           checkForWinner(firstFighter, secondFighterHP);
+          isFirstFighterCriticalHitCombinationDisabled = true;
+          setTimeout(() => (isFirstFighterCriticalHitCombinationDisabled = false), criticalHitCombinationTime);
         }
         break;
       case PlayerTwoCriticalHitCombination[keyIndexPlTwoCriticalHitCombination]:
         keyIndexPlTwoCriticalHitCombination++;
-        if (keyIndexPlTwoCriticalHitCombination === 3) {
+        if (keyIndexPlTwoCriticalHitCombination === 3 && !isSecondFighterCriticalHitCombinationDisabled) {
           firstFighterHP = firstFighterHP - getResultCombinationDamage(secondFighter);
           firstFighterHealthIndicator.style.width = (firstFighterHP / firstFighterHPConst) * 100 + '%';
           keyIndexPlTwoCriticalHitCombination = 0;
           checkForWinner(secondFighter, firstFighterHP);
+          isSecondFighterCriticalHitCombinationDisabled = true;
+          setTimeout(() => (isSecondFighterCriticalHitCombinationDisabled = false), criticalHitCombinationTime);
         }
         break;
       default:
+        keyIndexPlOneCriticalHitCombination = 0;
+        keyIndexPlTwoCriticalHitCombination = 0;
         return;
     }
   }
